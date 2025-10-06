@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>বরফি বাইট | Cart</title>
+<style>
+:root {
+  --primary:#800020; --secondary:#FFD700; --bg-light:#fffaf5;
+  --footer-bg:#1a1a1a; --text-dark:#333;
+}
+
+body{
+  margin:0;
+  font-family:'Segoe UI',sans-serif;
+  background:var(--bg-light);
+  color:var(--text-dark);
+  display:flex;
+  flex-direction:column;
+  min-height:100vh;
+}
+main{flex:1;}
+nav{background:var(--primary);color:#fff;padding:15px 25px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;position:sticky;top:0;z-index:1000;}
+.logo{font-size:26px;font-weight:bold;color:var(--secondary);}
+.menu{display:flex;gap:15px;}
+.menu a{text-decoration:none;color:#fff;font-weight:bold;padding:8px 15px;border-radius:6px;transition:.3s;position:relative;}
+.menu a.active::after{content:"";position:absolute;bottom:2px;left:15%;width:70%;height:3px;background:var(--secondary);border-radius:3px;}
+.menu a:hover{background:var(--secondary);color:#000;}
+.hamburger{display:none;font-size:28px;background:none;border:none;color:#fff;cursor:pointer;}
+@media(max-width:768px){
+  .hamburger{display:block}
+  .menu{display:none;flex-direction:column;width:100%;background:#4d0010;position:absolute;top:60px;left:0}
+  .menu.show{display:flex}
+  .menu a{text-align:center}
+}
+
+.cart-container {padding:40px 20px;max-width:900px;margin:auto;}
+.cart-container h2 {color:var(--primary);margin-bottom:20px;text-align:center;}
+table {width:100%;border-collapse:collapse;margin-bottom:20px;}
+th,td {border:1px solid #ccc;padding:12px;text-align:center;}
+th {background:var(--primary);color:white;}
+.empty {text-align:center;color:#888;margin-top:40px;}
+.btn {padding:10px 18px;border:none;border-radius:6px;cursor:pointer;font-weight:bold;margin:5px;}
+.clear-btn {background:#dc3545;color:#fff;}
+.order-btn {background:var(--secondary);color:#000;}
+.quantity-btn {padding:4px 8px;margin:0 2px;border:none;background:#ccc;border-radius:4px;cursor:pointer;}
+.subtotal {text-align:right;font-size:18px;font-weight:bold;margin-top:10px;}
+
+.modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.6);justify-content:center;align-items:center;z-index:2000;}
+.modal-content{background:#fff;padding:30px;border-radius:10px;width:90%;max-width:400px;position:relative;animation:fadeIn .3s ease;}
+.modal-content h3{color:var(--primary);margin-bottom:20px;text-align:center;}
+.modal-content label{display:block;margin:8px 0 4px;}
+.modal-content input, .modal-content textarea{width:100%;padding:10px;margin-bottom:12px;border-radius:6px;border:1px solid #ccc;}
+.modal-content button{background:var(--secondary);border:none;color:#000;padding:10px 18px;font-weight:bold;border-radius:6px;cursor:pointer;width:100%;transition:.3s;}
+.modal-content button:hover{background:#ffef8b;}
+.close-btn{position:absolute;top:10px;right:15px;font-size:22px;font-weight:bold;cursor:pointer;}
+@keyframes fadeIn{from{opacity:0;transform:scale(.9)}to{opacity:1;transform:scale(1)}}
+
+.notification{position:fixed;top:80px;right:20px;background:#4BB543;color:#fff;padding:12px 20px;border-radius:8px;box-shadow:0 4px 12px rgba(0,0,0,.2);opacity:0;transition:.5s;z-index:2000;}
+
+footer{background:var(--footer-bg);color:#ddd;padding:50px 20px 20px;margin-top:auto;}
+.footer-container{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:40px;}
+.footer-section h3{color:var(--secondary);margin-bottom:15px;}
+.footer-section a{color:#ccc;text-decoration:none;display:block;margin-bottom:8px;transition:.3s;}
+.footer-section a:hover{color:var(--secondary);}
+.social-icons a{margin-right:10px;color:#ccc;font-size:20px;transition:.3s;}
+.social-icons a:hover{color:var(--secondary);}
+.footer-bottom{text-align:center;margin-top:30px;font-size:14px;color:#aaa;}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="logo">বরফি বাইট</div>
+  <button class="hamburger" onclick="toggleMenu()">☰</button>
+  <div class="menu" id="menu">
+    <a href="index.html" >Home</a>
+    <a href="products.html">Products</a>
+    <a href="cart.html" class="active">🛒 Cart (<span id="cart-count">0</span>)</a>
+    <a href="contact.html" >Contact</a>
+    <a href="about.html">About</a>
+  </div>
+</nav>
+
+<main>
+<div class="cart-container">
+  <h2>🛒 আপনার কার্ট</h2>
+  <div id="cart-items"></div>
+
+  <p class="subtotal">মোট: ৳ <span id="total">0</span></p>
+
+  <button class="btn clear-btn" onclick="clearCart()">🗑️ Clear Cart</button>
+  <button class="btn order-btn" onclick="openOrderModal()">🛍️ অর্ডার করুন</button>
+</div>
+</main>
+
+<!-- ✅ Order Modal -->
+<div class="modal" id="orderModal">
+  <div class="modal-content">
+    <span class="close-btn" onclick="closeOrderModal()">✖</span>
+    <h3>🛍️ অর্ডার করুন</h3>
+    <div id="order-summary" style="margin-bottom:15px;"></div>
+    <label>নাম:</label>
+    <input type="text" id="customerName" placeholder="আপনার নাম লিখুন">
+    <label>মোবাইল নম্বর:</label>
+    <input type="text" id="customerMobile" placeholder="মোবাইল নম্বর লিখুন">
+    <label>ঠিকানা:</label>
+    <textarea id="customerAddress" placeholder="আপনার ঠিকানা লিখুন..."></textarea>
+    <button onclick="submitOrder()">অর্ডার জমা দিন</button>
+  </div>
+</div>
+
+<!-- ✅ Feedback Modal -->
+<div class="modal" id="feedbackModal">
+  <div class="modal-content">
+    <span class="close-btn" onclick="closeFeedback()">✖</span>
+    <h3>💬 Feedback দিন</h3>
+    <label>নাম:</label>
+    <input type="text" id="name" placeholder="আপনার নাম লিখুন">
+    <label>মোবাইল নম্বর:</label>
+    <input type="text" id="phone" placeholder="মোবাইল নম্বর লিখুন">
+    <label>মতামত:</label>
+    <textarea id="feedback" placeholder="আপনার মতামত লিখুন..."></textarea>
+    <button onclick="sendFeedback()">পাঠান</button>
+  </div>
+</div>
+
+<div class="notification" id="notify"></div>
+
+<footer>
+  <div class="footer-container">
+    <div class="footer-section">
+      <h3>🔗 লিঙ্ক</h3>
+      <a href="index.html">হোম</a>
+      <a href="products.html">পণ্যসমূহ</a>
+      <a href="cart.html">কার্ট</a>
+      <a href="about.html">আমাদের সম্পর্কে</a>
+      <a href="contact.html">যোগাযোগ</a>
+    </div>
+    <div class="footer-section">
+      <h3>📞 যোগাযোগ</h3>
+      <a href="mailto:tirthochakroborty04@gmail.com">Send Email</a>
+      <p>WhatsApp: <a href="https://wa.me/8801304218750" target="_blank">01304-218750</a></p>
+      <p>ঠিকানা: ঢাকা, বাংলাদেশ</p>
+    </div>
+    <div class="footer-section">
+      <h3>💬 মতামত দিন</h3>
+      <button style="padding:10px 15px;background:var(--secondary);border:none;border-radius:8px;font-weight:bold;cursor:pointer;" onclick="openFeedback()">Feedback দিন</button>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    © 2025 বরফি বাইট— সকল অধিকার সংরক্ষিত
+  </div>
+</footer>
+
+<script>
+function toggleMenu(){
+  const menu=document.getElementById('menu');
+  menu.classList.toggle('show');
+  const btn=document.querySelector('.hamburger');
+  btn.textContent=menu.classList.contains('show')?'✖':'☰';
+}
+
+function showNotification(msg){
+  const notify=document.getElementById("notify");
+  notify.innerText=msg;
+  notify.style.opacity=1;
+  setTimeout(()=>{notify.style.opacity=0;},2000);
+}
+
+// Load Cart and combine same products
+function loadCart(){
+  let cart=JSON.parse(localStorage.getItem("cart"))||[];
+  if(cart.length===0){
+    document.getElementById("cart-items").innerHTML="<p class='empty'>❌ আপনার কার্ট খালি</p>";
+    document.getElementById("total").innerText="0";
+    document.getElementById("cart-count").innerText="0";
+    return;
+  }
+
+  let combined = {};
+  cart.forEach(item=>{
+    if(combined[item.name]){
+      combined[item.name].quantity +=1;
+    }else{
+      combined[item.name]={price:item.price,quantity:1};
+    }
+  });
+
+  let html="<table><tr><th>নাম</th><th>দাম</th><th>পরিমাণ</th><th>মোট</th></tr>";
+  let total=0;
+  for(let name in combined){
+    let itemTotal=combined[name].price*combined[name].quantity;
+    total += itemTotal;
+    html+=`<tr>
+      <td>${name}</td>
+      <td>৳${combined[name].price}</td>
+      <td>${combined[name].quantity}</td>
+      <td>৳${itemTotal}</td>
+    </tr>`;
+  }
+  html+="</table>";
+  document.getElementById("cart-items").innerHTML=html;
+  document.getElementById("total").innerText=total;
+  document.getElementById("cart-count").innerText=cart.length;
+}
+
+function clearCart(){
+  if(confirm("আপনি কি নিশ্চিত সব মুছে ফেলতে চান?")){
+    localStorage.removeItem("cart");
+    loadCart();
+    showNotification("কার্ট খালি করা হয়েছে");
+  }
+}
+
+// Order Modal
+function openOrderModal(){
+  let cart=JSON.parse(localStorage.getItem("cart"))||[];
+  if(cart.length===0){alert("❌ কার্ট খালি"); return;}
+  let combined = {};
+  cart.forEach(item=>{
+    if(combined[item.name]){
+      combined[item.name].quantity +=1;
+    }else{
+      combined[item.name]={price:item.price,quantity:1};
+    }
+  });
+  let summary="";
+  let total=0;
+  for(let name in combined){
+    let itemTotal=combined[name].price*combined[name].quantity;
+    total += itemTotal;
+    summary+=`${name} × ${combined[name].quantity} = ৳${itemTotal}\n`;
+  }
+  summary += `মোট: ৳${total}`;
+  document.getElementById("order-summary").innerText=summary;
+  document.getElementById("orderModal").style.display='flex';
+}
+
+function closeOrderModal(){document.getElementById("orderModal").style.display='none';}
+
+function submitOrder(){
+  let name=document.getElementById("customerName").value.trim();
+  let phone=document.getElementById("customerMobile").value.trim();
+  let address=document.getElementById("customerAddress").value.trim();
+  if(!name || !phone || !address){alert("⚠️ সব তথ্য পূরণ করুন"); return;}
+
+  let cart=JSON.parse(localStorage.getItem("cart"))||[];
+  let combined = {};
+  cart.forEach(item=>{
+    if(combined[item.name]){
+      combined[item.name].quantity +=1;
+    }else{
+      combined[item.name]={price:item.price,quantity:1};
+    }
+  });
+
+  let orderMsg="";
+  let total=0;
+  for(let n in combined){
+    let itemTotal=combined[n].price*combined[n].quantity;
+    total += itemTotal;
+    orderMsg+=`${n} × ${combined[n].quantity} = ৳${itemTotal}\n`;
+  }
+  orderMsg += `মোট: ৳${total}`;
+
+  let msg=`🛒 নতুন অর্ডার\n\n👤 নাম: ${name}\n📞 ফোন: ${phone}\n🏠 ঠিকানা: ${address}\n\nপণ্যসমূহ:\n${orderMsg}`;
+  let whatsappNumber="8801304218750";
+  let url=`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(msg)}`;
+  window.open(url,"_blank");
+
+  localStorage.removeItem("cart");
+  loadCart();
+  closeOrderModal();
+  showNotification("ধন্যবাদ! আপনার অর্ডার WhatsApp-এ পাঠানো হচ্ছে ✅");
+}
+
+// Feedback Modal
+function openFeedback(){document.getElementById('feedbackModal').style.display='flex';}
+function closeFeedback(){document.getElementById('feedbackModal').style.display='none';}
+function sendFeedback(){
+  const name = document.getElementById('name').value.trim();
+  const phone = document.getElementById('phone').value.trim();
+  const feedback = document.getElementById('feedback').value.trim();
+
+  if(!name || !phone || !feedback){
+    alert("⚠️ সব ঘর পূরণ করুন!");
+    return;
+  }
+
+  const msg = `💬 নতুন ফিডব্যাক এসেছে!\n\nনাম: ${name}\nফোন: ${phone}\nমতামত: ${feedback}`;
+  const phoneNumber = "8801304218750";
+  const url = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(msg)}`;
+  window.open(url,"_blank");
+
+  document.getElementById('name').value='';
+  document.getElementById('phone').value='';
+  document.getElementById('feedback').value='';
+
+  closeFeedback();
+  showNotification("ধন্যবাদ! আপনার মতামত পাঠানো হয়েছে ✅");
+}
+
+// Initial load
+loadCart();
+</script>
+
+</body>
+</html>

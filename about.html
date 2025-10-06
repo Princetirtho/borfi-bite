@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>বরফি বাইট | About</title>
+<style>
+:root {
+  --primary:#800020; --secondary:#FFD700; --bg-light:#fffaf5;
+  --footer-bg:#1a1a1a; --text-dark:#333;
+}
+body{
+  margin:0;
+  font-family:'Segoe UI',sans-serif;
+  background:var(--bg-light);
+  color:var(--text-dark);
+  display:flex;
+  flex-direction:column;
+  min-height:100vh;
+}
+main{flex:1;}
+nav{background:var(--primary);color:#fff;padding:15px 25px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;position:sticky;top:0;z-index:1000;}
+.logo{font-size:26px;font-weight:bold;color:var(--secondary);}
+.menu{display:flex;gap:15px;}
+.menu a{text-decoration:none;color:#fff;font-weight:bold;padding:8px 15px;border-radius:6px;transition:.3s;position:relative;}
+.menu a.active::after{content:"";position:absolute;bottom:2px;left:15%;width:70%;height:3px;background:var(--secondary);border-radius:3px;}
+.menu a:hover{background:var(--secondary);color:#000;}
+.hamburger{display:none;font-size:28px;background:none;border:none;color:#fff;cursor:pointer;}
+@media(max-width:768px){
+  .hamburger{display:block}
+  .menu{display:none;flex-direction:column;width:100%;background:#4d0010;position:absolute;top:60px;left:0}
+  .menu.show{display:flex}
+  .menu a{text-align:center}
+}
+.hero{background:linear-gradient(rgba(0,0,0,.5),rgba(0,0,0,.6)),url('images/bg.jpg') center/cover no-repeat;padding:120px 20px;text-align:center;color:#fff;}
+.hero h1{font-size:48px;color:var(--secondary);margin-bottom:15px;text-shadow:2px 2px 6px black;}
+.hero p{font-size:20px;margin-bottom:25px;}
+.hero button{background:var(--secondary);border:none;color:#000;padding:12px 28px;font-size:18px;font-weight:bold;border-radius:8px;cursor:pointer;transition:.3s;}
+.hero button:hover{background:#ffef8b;transform:scale(1.05);}
+.products{padding:60px 20px;text-align:center;}
+.products h2{color:var(--primary);margin-bottom:25px;font-size:32px;}
+.product-grid{display:flex;flex-wrap:wrap;gap:25px;justify-content:center;}
+.product-card{background:#fff;width:250px;border-radius:12px;box-shadow:0 4px 12px rgba(0,0,0,.15);padding:15px;transition:.3s;display:flex;flex-direction:column;align-items:center;position:relative;}
+.product-card:hover{transform:translateY(-6px);}
+.slider{position:relative;width:100%;overflow:hidden;border-radius:10px;margin-bottom:10px;}
+.slider img{width:100%;display:none;border-radius:10px;}
+.slider img.active{display:block;}
+.prev,.next{position:absolute;top:50%;transform:translateY(-50%);background:rgba(0,0,0,0.3);color:#fff;border:none;padding:6px 12px;cursor:pointer;border-radius:6px;}
+.prev{left:8px;}
+.next{right:8px;}
+.prev:hover,.next:hover{background:rgba(0,0,0,0.6);}
+.product-card h3{margin:12px 0 8px;color:var(--primary);}
+.product-card p{color:#555;font-weight:bold;margin-bottom:12px;}
+.btn-group{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;}
+.order-btn,.cart-btn{background:var(--secondary);border:none;color:#000;padding:8px 14px;font-weight:bold;border-radius:8px;cursor:pointer;transition:.3s;}
+.order-btn:hover,.cart-btn:hover{background:#ffef8b;}
+.view-all{margin-top:30px;}
+.view-all a{background:var(--primary);color:#fff;padding:12px 30px;border-radius:8px;text-decoration:none;font-weight:bold;transition:.3s;}
+.view-all a:hover{background:var(--secondary);color:#000;}
+footer{background:var(--footer-bg);color:#ddd;padding:50px 20px 20px;margin-top:auto;}
+.footer-container{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:40px;}
+.footer-section h3{color:var(--secondary);margin-bottom:15px;}
+.footer-section a{color:#ccc;text-decoration:none;display:block;margin-bottom:8px;transition:.3s;}
+.footer-section a:hover{color:var(--secondary);}
+.social-icons a{margin-right:10px;color:#ccc;font-size:20px;transition:.3s;}
+.social-icons a:hover{color:var(--secondary);}
+.footer-bottom{text-align:center;margin-top:30px;font-size:14px;color:#aaa;}
+.notification{position:fixed;top:80px;right:20px;background:#4BB543;color:#fff;padding:12px 20px;border-radius:8px;box-shadow:0 4px 12px rgba(0,0,0,.2);opacity:0;transition:.5s;z-index:2000;}
+.modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.6);justify-content:center;align-items:center;z-index:2000;}
+.modal-content{background:#fff;padding:30px;border-radius:10px;width:90%;max-width:400px;position:relative;animation:fadeIn .3s ease;}
+.modal-content h3{color:var(--primary);margin-bottom:20px;text-align:center;}
+.modal-content label{display:block;margin:8px 0 4px;}
+.modal-content input, .modal-content textarea{width:100%;padding:10px;margin-bottom:12px;border-radius:6px;border:1px solid #ccc;}
+.modal-content button{background:var(--secondary);border:none;color:#000;padding:10px 18px;font-weight:bold;border-radius:6px;cursor:pointer;width:100%;transition:.3s;}
+.modal-content button:hover{background:#ffef8b;}
+.close-btn{position:absolute;top:10px;right:15px;font-size:22px;font-weight:bold;cursor:pointer;}
+@keyframes fadeIn{from{opacity:0;transform:scale(.9)}to{opacity:1;transform:scale(1)}}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="logo">বরফি বাইট</div>
+  <button class="hamburger" onclick="toggleMenu()">☰</button>
+  <div class="menu" id="menu">
+    <a href="index.html" >Home</a>
+    <a href="products.html">Products</a>
+    <a href="cart.html">🛒 Cart (<span id="cart-count">0</span>)</a>
+    <a href="about.html" class="active">About</a>
+    <a href="contact.html">Contact</a>
+  </div>
+</nav>
+
+<main>
+  <section class="hero" style="padding:80px 20px;">
+    <h1>আমাদের সম্পর্কে</h1>
+    <p>বরফি বাইট এ আমরা বিশ্বাস করি মানসম্পন্ন প্রোডাক্ট এবং গ্রাহক সন্তুষ্টি সবচেয়ে বড় সম্পদ। আমাদের লক্ষ্য গ্রাহকদের তাজা এবং সুস্বাদু বরফি পৌঁছে দেওয়া।</p>
+  </section>
+
+  <section class="products" style="padding:50px 20px;background:#fff5f0;">
+    <h2>আমাদের তথ্য</h2>
+    <div style="max-width:800px;margin:0 auto;text-align:left;line-height:1.8;color:#333;font-size:18px;">
+      <p><strong>আমাদের সার্ভিস এরিয়া:</strong> বগুড়া সদর</p>
+      <p><strong>সার্ভিস টাইম:</strong> দুপুর ১২ টা - সন্ধ্যা ৬টা (শুক্রবার বন্ধ)</p>
+      <p>বরফি বাইটের প্রতিটি পণ্য তৈরি করা হয় সতেজ উপকরণ ব্যবহার করে, যাতে আপনি প্রতিটি কামড়ে স্বাদ ও মান অনুভব করতে পারেন। আমরা আমাদের গ্রাহকদের সর্বোচ্চ সন্তুষ্টি দিতে প্রতিশ্রুতিবদ্ধ।</p>
+      <p>আমাদের দলে রয়েছে অভিজ্ঞ ও দক্ষ কর্মীরা, যারা প্রতিটি অর্ডারকে গুরুত্বের সঙ্গে প্রক্রিয়া করে। আমাদের লক্ষ্য হলো দ্রুত ডেলিভারি, সর্বোচ্চ মানের প্রোডাক্ট, এবং অনলাইন অর্ডারকে সহজ ও নিরাপদ করা।</p>
+      <p>আপনি যেকোনো সময় আমাদের সাথে যোগাযোগ করতে পারেন। আমরা আপনার মতামতকে গুরুত্ব দিয়ে আমাদের সেবাকে আরও উন্নত করার চেষ্টা করি।</p>
+    </div>
+  </section>
+
+  <section class="products" style="padding:50px 20px;">
+    <h2>আমাদের উদ্দেশ্য</h2>
+    <div style="max-width:800px;margin:0 auto;text-align:left;line-height:1.8;color:#333;font-size:18px;">
+      <p>আমরা চাই প্রতিটি গ্রাহক বরফি বাইট থেকে শুধু প্রোডাক্টই না, বরং একটি সুন্দর অভিজ্ঞতা পান। আমাদের উদ্দেশ্য হলো:</p>
+      <ul style="margin-left:20px;list-style-type:disc;">
+        <li>সর্বোচ্চ মানের বরফি সরবরাহ করা।</li>
+        <li>গ্রাহকের প্রত্যেক অর্ডারকে দ্রুত এবং নির্ভুলভাবে পৌঁছে দেওয়া।</li>
+        <li>গ্রাহকের মতামতকে গুরুত্ব দিয়ে সেবা উন্নত করা।</li>
+        <li>আমাদের সার্ভিস এরিয়ার মধ্যে সর্বোচ্চ গ্রাহক সন্তুষ্টি নিশ্চিত করা।</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="products" style="padding:50px 20px;background:#fff5f0;">
+    <h2>কেন আমাদের নির্বাচন করবেন?</h2>
+    <div style="max-width:800px;margin:0 auto;text-align:left;line-height:1.8;color:#333;font-size:18px;">
+      <p>বরফি বাইটে আমরা শুধু বরফি বিক্রি করি না, আমরা বিক্রি করি বিশ্বাস। আমাদের কিছু বিশেষ বৈশিষ্ট্য:</p>
+      <ul style="margin-left:20px;list-style-type:circle;">
+        <li>তাজা উপকরণ এবং মানসম্মত প্রস্তুতি।</li>
+        <li>দ্রুত এবং নির্ভুল ডেলিভারি।</li>
+        <li>সহজ অনলাইন অর্ডার এবং WhatsApp অর্ডার সাপোর্ট।</li>
+        <li>গ্রাহক সন্তুষ্টিকে সর্বোচ্চ অগ্রাধিকার।</li>
+        <li>সার্ভিস সময়ে মান বজায় রাখা এবং নিয়মিত মান যাচাই।</li>
+      </ul>
+      <p style="margin-top:15px;">আমাদের সাথে থাকুন এবং উপভোগ করুন সেরা বরফির স্বাদ।</p>
+    </div>
+  </section>
+</main>
+
+<!-- ✅ Feedback Modal -->
+<div class="modal" id="feedbackModal">
+  <div class="modal-content">
+    <span class="close-btn" onclick="closeFeedback()">✖</span>
+    <h3>💬 আপনার মতামত দিন</h3>
+    <label>নাম:</label>
+    <input type="text" id="name" placeholder="আপনার নাম লিখুন">
+    <label>ফোন নম্বর:</label>
+    <input type="text" id="phone" placeholder="আপনার ফোন নাম্বার লিখুন">
+    <label>মতামত:</label>
+    <textarea id="feedback" placeholder="আপনার মতামত লিখুন"></textarea>
+    <button onclick="sendFeedback()">পাঠান</button>
+  </div>
+</div>
+
+<div class="notification" id="notify"></div>
+
+<footer>
+  <div class="footer-container">
+    <div class="footer-section">
+      <h3>🔗 লিঙ্ক</h3>
+      <a href="index.html">হোম</a>
+      <a href="products.html">পণ্যসমূহ</a>
+      <a href="cart.html">কার্ট</a>
+      <a href="about.html">আমাদের সম্পর্কে</a>
+      <a href="contact.html">যোগাযোগ</a>
+    </div>
+    <div class="footer-section">
+      <h3>📞 যোগাযোগ</h3>
+      <a href="mailto:tirthochakroborty04@gmail.com">Send Email</a>
+      <p>WhatsApp: <a href="https://wa.me/8801304218750" target="_blank">01304-218750</a></p>
+      <p>ঠিকানা: ঢাকা, বাংলাদেশ</p>
+    </div>
+    <div class="footer-section">
+      <h3>💬 মতামত দিন</h3>
+      <button style="padding:10px 15px;background:var(--secondary);border:none;border-radius:8px;font-weight:bold;cursor:pointer;" onclick="openFeedback()">Feedback দিন</button>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    © 2025 বরফি বাইট— সকল অধিকার সংরক্ষিত
+  </div>
+</footer>
+
+<script>
+function toggleMenu(){
+  const menu=document.getElementById('menu');
+  menu.classList.toggle('show');
+  const btn=document.querySelector('.hamburger');
+  btn.textContent=menu.classList.contains('show')?'✖':'☰';
+}
+
+function addToCart(name,price){
+  let cart=JSON.parse(localStorage.getItem("cart"))||[];
+  cart.push({name,price});
+  localStorage.setItem("cart",JSON.stringify(cart));
+  updateCartCount();
+  showNotification(name+" কার্টে যোগ হয়েছে!");
+}
+
+function updateCartCount(){
+  let cart=JSON.parse(localStorage.getItem("cart"))||[];
+  document.getElementById("cart-count").innerText=cart.length;
+}
+
+function showNotification(msg){
+  const notify=document.getElementById("notify");
+  notify.innerText=msg;
+  notify.style.opacity=1;
+  setTimeout(()=>{notify.style.opacity=0;},2000);
+}
+
+updateCartCount();
+
+// ✅ Feedback Modal System
+function openFeedback(){document.getElementById('feedbackModal').style.display='flex';}
+function closeFeedback(){document.getElementById('feedbackModal').style.display='none';}
+function sendFeedback(){
+  const name=document.getElementById('name').value.trim();
+  const phone=document.getElementById('phone').value.trim();
+  const feedback=document.getElementById('feedback').value.trim();
+
+  if(!name || !phone || !feedback){alert("সব ঘর পূরণ করুন!"); return;}
+
+  const msg = `💬 নতুন ফিডব্যাক এসেছে!\n\nনাম: ${name}\nফোন: ${phone}\nমতামত: ${feedback}`;
+  const phoneNumber="8801304218750"; // WhatsApp নম্বর
+  const url=`https://wa.me/${phoneNumber}?text=${encodeURIComponent(msg)}`;
+  window.open(url,"_blank");
+
+  closeFeedback();
+  showNotification("আপনার মতামত পাঠানো হয়েছে!");
+
+  document.getElementById('name').value='';
+  document.getElementById('phone').value='';
+  document.getElementById('feedback').value='';
+}
+</script>
+
+</body>
+</html>
